@@ -24,17 +24,21 @@ Lingua::KO::Romanize::Hangul - Romanization of Korean language
 
 Hangul is phonemic characters of the Korean language.
 
-    $conv = Lingua::KO::Romanize::Hangul->new();
+=head2 $conv = Lingua::KO::Romanize::Hangul->new();
 
 This constructer methods returns a new object.
 
-    $roman = $conv->char( $hangul );
+=head2 $roman = $conv->char( $hangul );
 
 This method returns romanized letters of a Hangul character.
 It returns undef when $hanji is not a valid Hangul character.
 The argument's encoding must be UTF-8.
 
-    @array = $conv->string( $string );
+=head2 $roman = $conv->chars( $string );
+
+This method returns romanized letters of Hangul characters.
+
+=head2 @array = $conv->string( $string );
 
 This method returns a array of referenced arrays
 which are pairs of a Hangul chacater and its romanized letters.
@@ -45,13 +49,14 @@ which are pairs of a Hangul chacater and its romanized letters.
 
 =head1 SEE ALSO
 
-http://www.kawa.net/works/ajax/romanize/hangul-e.html
+L<Lingua::JA::Romanize::Japanese>
+L<Lingua::ZH::Romanize::Pinyin>
+
+http://www.kawa.net/works/perl/romanize/romanize-e.html
 
 =head1 AUTHOR
 
-Yusuke Kawasaki <u-suke [at] kawa.net>
-
-http://www.kawa.net/
+Yusuke Kawasaki http://www.kawa.net/
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -65,7 +70,7 @@ and/or modify it under the same terms as Perl itself.
     package Lingua::KO::Romanize::Hangul;
     use strict;
     use vars qw( $VERSION );
-    $VERSION = "0.11";
+    $VERSION = "0.12";
 # ----------------------------------------------------------------
     my $INITIAL_LETTER = [map {$_ eq "-" ? "" : $_} qw(
         g   kk  n   d   tt  r   m   b   bb  s   ss  -   j   jj
@@ -100,6 +105,12 @@ sub char {
     my $peak = int( $han / 28 ) % 21;
     my $fin  = $han % 28;
     join( "", $INITIAL_LETTER->[$init], $PEAK_LETTER->[$peak], $FINAL_LETTER->[$fin] );
+}
+# ----------------------------------------------------------------
+sub chars {
+    my $self = shift;
+    my @array = $self->string( shift );
+    join( " ", map {$#$_>0 ? $_->[1] : $_->[0]} @array );
 }
 # ----------------------------------------------------------------
 #   [UCS-2] AC00-D7A3
